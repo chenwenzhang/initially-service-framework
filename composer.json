@@ -1,0 +1,30 @@
+{
+  "name": "chenwenzhang/initially-service-framework",
+  "description": "simple service framework",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "chenwenzhang",
+      "email": "381266902@qq.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "chenwenzhang/initially-rpc": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Initially\\Service\\": "src/Initially/Service/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "http://packagist.phpcomposer.com"
+    },
+    {
+      "packagist": false
+    }
+  ]
+}
