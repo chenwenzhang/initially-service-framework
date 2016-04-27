@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "chenwenzhang/initially-rpc": "dev-master"
+    "chenwenzhang/initially-rpc": "v1.0.0"
   },
   "autoload": {
     "psr-4": {
