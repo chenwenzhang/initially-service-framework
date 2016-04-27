@@ -58,7 +58,7 @@ class Application
      */
     public function bootstrap(Bootstrap $bootstrap)
     {
-        if ($this->isBootstrap) {
+        if (!$this->isBootstrap) {
             $this->_appStageCheck();
             $this->isBootstrap = !$this->isBootstrap;
             $bootstrapReflection = new ReflectionClass($bootstrap);
