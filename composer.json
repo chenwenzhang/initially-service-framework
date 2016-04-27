@@ -10,7 +10,6 @@
     }
   ],
   "require": {
-    "php": ">=5.5.0",
     "chenwenzhang/initially-rpc": "dev-master"
   },
   "autoload": {
