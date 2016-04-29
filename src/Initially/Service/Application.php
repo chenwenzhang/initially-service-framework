@@ -13,11 +13,6 @@ class Application
 {
 
     /**
-     * @var Application
-     */
-    private static $instance;
-
-    /**
      * @var bool
      */
     private $isBootstrap = false;
@@ -28,26 +23,26 @@ class Application
     private $appStage;
 
     /**
-     * Application constructor.
-     *
-     * @throws AppException
+     * @var string
      */
-    private function __construct()
-    {
-        if (!defined("CONF_PATH")) {
-            throw new AppException("CONF_PATH undefined");
-        }
-    }
+    private $configPath;
 
     /**
-     * @return Application
+     * Application constructor.
+     *
+     * @param string $stage
+     * @param string $configPath
+     * @throws AppException
      */
-    public static function getInstance()
+    public function __construct($stage = null, $configPath = null)
     {
-        if (!isset(self::$instance)) {
-            self::$instance = new Application();
+        $this->appStage = $stage;
+        $this->configPath = $configPath;
+        if (is_null($this->appStage)) {
+            throw new AppException("Stage error");
+        } elseif (!is_dir($this->configPath)) {
+            throw new AppException("Config path error");
         }
-        return self::$instance;
     }
 
     /**
@@ -59,8 +54,8 @@ class Application
     public function bootstrap(Bootstrap $bootstrap)
     {
         if (!$this->isBootstrap) {
-            $this->_appStageCheck();
             $this->isBootstrap = !$this->isBootstrap;
+            DependencyInjection::set("config", $this->_initConfig());
             $bootstrapReflection = new ReflectionClass($bootstrap);
             foreach ($bootstrapReflection->getMethods() as $method) {
                 if (strpos($method->getName(), "_init") === 0) {
@@ -82,6 +77,20 @@ class Application
         $initiallyRpcServerApp->run();
     }
 
+    /**
+     * Init config
+     * @return \Closure
+     */
+    private function _initConfig()
+    {
+        return function(){
+            $directories = array(
+                $this->configPath . "/common",
+                $this->configPath . "/" . $this->appStage
+            );
+            return Config::factory($directories);
+        };
+    }
 
     /**
      * @return string
@@ -92,23 +101,11 @@ class Application
     }
 
     /**
-     * @param $appStage
-     * @return $this
+     * @return string
      */
-    public function setAppStage($appStage)
+    public function getConfigPath()
     {
-        $this->appStage = $appStage;
-        return $this;
-    }
-
-    /**
-     * @throws AppException
-     */
-    private function _appStageCheck()
-    {
-        if (!isset($this->appStage)) {
-            throw new AppException("unset app stage, please call Initially\\Service\\Application::setAppStage");
-        }
+        return $this->configPath;
     }
 
 }
